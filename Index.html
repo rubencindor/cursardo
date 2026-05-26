@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso de Python — De cero al mercado laboral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --bg2: #161b27;
+  --bg3: #1e2535;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8eaf0;
+  --muted: #7a8099;
+  --accent: #4f8eff;
+  --accent2: #7c5cfc;
+  --green: #34d399;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --pink: #f472b6;
+  --sidebar-w: 260px;
+  --font: 'Sora', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+}
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s;
+}
+.sidebar-logo {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo .logo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .03em;
+}
+.sidebar-logo .logo-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.sidebar-progress {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-progress .prog-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.prog-track {
+  height: 3px;
+  background: var(--border2);
+  border-radius: 99px;
+}
+.prog-fill {
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+.sidebar-nav { padding: 12px 0; flex: 1; }
+.mod-group { margin-bottom: 4px; }
+.mod-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 12.5px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  border-radius: 0;
+}
+.mod-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.mod-btn.active { color: var(--accent); background: rgba(79,142,255,0.08); }
+.mod-btn.done .mod-dot { background: var(--green); }
+.mod-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--border2);
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+.mod-btn.active .mod-dot { background: var(--accent); }
+.mod-num {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 16px;
+}
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* MAIN */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+}
+.topbar {
+  padding: 16px 40px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-title { font-size: 14px; font-weight: 500; color: var(--text); }
+.topbar-meta { font-size: 12px; color: var(--muted); }
+#hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.content {
+  padding: 40px;
+  max-width: 820px;
+}
+.module-page { display: none; }
+.module-page.active { display: block; }
+
+/* TYPOGRAPHY */
+.mod-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.mod-tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.mod-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+.mod-desc { font-size: 15px; color: var(--muted); line-height: 1.7; }
+.mod-stats {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+}
+.mod-stat {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.mod-stat span { color: var(--text); font-weight: 500; }
+
+/* LESSONS */
+.lesson-block { margin-bottom: 36px; }
+.lesson-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.lesson-h {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.lesson-p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+/* CODE */
+.code-wrap {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.code-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+}
+.code-dots { display: flex; gap: 5px; }
+.code-dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.code-dots .d1 { background: #ff5f57; }
+.code-dots .d2 { background: #ffbd2e; }
+.code-dots .d3 { background: #28c840; }
+.code-lang { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.copy-btn {
+  font-size: 11px;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border2);
+  padding: 3px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.copy-btn:hover { color: var(--text); border-color: var(--accent); }
+.code-body {
+  padding: 16px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+}
+.kw { color: #c792ea; }
+.fn { color: #82aaff; }
+.str { color: var(--green); }
+.num { color: var(--amber); }
+.cm { color: #546e7a; font-style: italic; }
+.op { color: #89ddff; }
+.cls { color: var(--pink); }
+
+/* EDITABLE CODE */
+.editor-wrap {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.editor-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(79,142,255,0.06);
+}
+.editor-label {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 500;
+}
+.run-btn {
+  font-size: 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+.run-btn:hover { opacity: 0.85; }
+.editor-area {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  padding: 14px 18px;
+  line-height: 1.8;
+  resize: vertical;
+  min-height: 90px;
+}
+.output-area {
+  border-top: 1px solid var(--border);
+  padding: 12px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--green);
+  white-space: pre-wrap;
+  min-height: 36px;
+  display: none;
+}
+.output-area.err { color: var(--red); }
+.output-area.show { display: block; }
+
+/* CONCEPTS GRID */
+.concepts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.concept-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+.cc-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.badge-blue { background: rgba(79,142,255,0.15); color: var(--accent); }
+.badge-green { background: rgba(52,211,153,0.15); color: var(--green); }
+.badge-amber { background: rgba(251,191,36,0.15); color: var(--amber); }
+.badge-pink { background: rgba(244,114,182,0.15); color: var(--pink); }
+.badge-purple { background: rgba(124,92,252,0.15); color: var(--accent2); }
+.badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+.cc-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.cc-val { font-family: var(--mono); font-size: 12px; color: var(--accent); margin-bottom: 6px; }
+.cc-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* QUIZ */
+.quiz-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.quiz-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 10px;
+}
+.quiz-q { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+.quiz-opt {
+  padding: 10px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--text); background: rgba(79,142,255,0.06); }
+.quiz-opt.correct { background: rgba(52,211,153,0.1); border-color: var(--green); color: var(--green); }
+.quiz-opt.wrong { background: rgba(248,113,113,0.1); border-color: var(--red); color: var(--red); }
+.quiz-feedback { font-size: 13px; margin-top: 12px; color: var(--muted); display: none; }
+.quiz-feedback.show { display: block; }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+/* NAV BUTTONS */
+.lesson-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.nav-prev, .nav-next {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--border2);
+  background: none;
+  color: var(--muted);
+  text-decoration: none;
+}
+.nav-prev:hover { color: var(--text); border-color: var(--border2); background: var(--bg3); }
+.nav-next {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.nav-next:hover { opacity: 0.85; }
+.nav-next:disabled { opacity: 0.4; cursor: default; }
+
+/* CALLOUT */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: rgba(79,142,255,0.06);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.callout.warn { border-color: var(--amber); background: rgba(251,191,36,0.06); }
+.callout.tip { border-color: var(--green); background: rgba(52,211,153,0.06); }
+.callout strong { color: var(--text); font-weight: 500; }
+
+/* TABLE */
+.ref-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
+.ref-table th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border2);
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.ref-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+}
+.ref-table td:first-child { font-family: var(--mono); color: var(--accent); font-size: 12px; }
+.ref-table tr:last-child td { border-bottom: none; }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  #main { margin-left: 0; }
+  #hamburger { display: block; }
+  .content { padding: 24px 20px; }
+  .topbar { padding: 12px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">⬡ Python</div>
+    <div class="logo-sub">De cero al mercado laboral</div>
+  </div>
+  <div class="sidebar-progress">
+    <div class="prog-label">
+      <span>Progreso</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="sidebar-nav" id="nav-list"></div>
+  <div class="sidebar-footer">Curso generado con Claude · 2025</div>
+</nav>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar">
+    <button id="hamburger" onclick="toggleSidebar()">☰</button>
+    <div>
+      <div class="topbar-title" id="top-title">Módulo 1 — Fundamentos de Python</div>
+      <div class="topbar-meta" id="top-meta">Lección 1 de 5</div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);" id="top-done"></div>
+  </div>
+
+  <div class="content" id="content"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// COURSE DATA
+// ═══════════════════════════════════════════════
+const modules = [
+{
+  id: 'mod1',
+  title: 'Fundamentos de Python',
+  tag: 'Módulo 1',
+  desc: 'Instalación del entorno, primeros conceptos, variables, tipos de datos y operadores básicos.',
+  duration: '8 horas',
+  topics: '5 temas',
+  lessons: [
+    {
+      label: 'Setup',
+      title: 'Entorno de desarrollo',
+      body: `<p class="lesson-p">Antes de escribir código necesitás tres cosas: Python, un editor y saber verificar que todo funciona.</p>
+      <div class="concepts">
+        <div class="concept-card"><span class="cc-badge badge-blue">Paso 1</span><div class="cc-title">Python 3.12+</div><div class="cc-val">python.org</div><div class="cc-desc">El intérprete. Descargá el instalador para tu OS y marcá "Add to PATH".</div></div>
+        <div class="concept-card"><span class="cc-badge badge-green">Paso 2</span><div class="cc-title">VS Code</div><div class="cc-val">code.visualstudio.com</div><div class="cc-desc">El editor más usado en la industria. Gratis, extensible y liviano.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-purple">Paso 3</span><div class="cc-title">Extensión Python</div><div class="cc-val">Microsoft · VS Code</div><div class="cc-desc">Autocompletado, linting, debugger integrado y selección de intérprete.</div></div>
+      </div>
+      <div class="callout"><strong>Verificá la instalación</strong> abriendo la terminal y ejecutando <code style="color:var(--accent)">python --version</code>. Deberías ver algo como <code style="color:var(--green)">Python 3.12.x</code>.</div>`,
+      code: { lang: 'python', src: `<span class="cm"># Tu primer programa</span>\n<span class="fn">print</span>(<span class="str">"Hola, mundo!"</span>)\n<span class="cm"># Salida: Hola, mundo!</span>` },
+      editor: { id: 'e1a', default: 'print("Hola, mundo!")' },
+      quiz: null
+    },
+    {
+      label: 'Variables',
+      title: 'Variables y asignación',
+      body: `<p class="lesson-p">Una variable es un nombre que apunta a un valor en memoria. En Python no necesitás declarar el tipo — él lo infiere solo.</p>
+      <div class="callout tip"><strong>Snake_case:</strong> el estilo estándar en Python es <code style="color:var(--green)">nombre_de_variable</code> con minúsculas y guiones bajos. Para clases se usa CamelCase.</div>`,
+      code: { lang: 'python', src: `nombre    = <span class="str">"Ana"</span>         <span class="cm"># str</span>\nedad      = <span class="num">28</span>            <span class="cm"># int</span>\naltura    = <span class="num">1.65</span>          <span class="cm"># float</span>\nactivo    = <span class="kw">True</span>          <span class="cm"># bool</span>\n\n<span class="fn">print</span>(nombre, edad)   <span class="cm"># Ana 28</span>\n\n<span class="cm"># Asignación múltiple</span>\nx, y, z = <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>` },
+      editor: { id: 'e1b', default: 'nombre = "Tu nombre"\nedad = 25\nprint(f"Hola {nombre}, tenés {edad} años")' },
+      quiz: { q: '¿Cuál nombre de variable es válido en Python?', opts: ['1_usuario', 'nombre_usuario', 'nombre-usuario', 'nombre usuario'], correct: 1, ok: '¡Correcto! Snake_case es el estilo estándar.', fail: 'Recordá: no puede empezar con número ni tener guion medio o espacios.' }
+    },
+    {
+      label: 'Tipos',
+      title: 'Tipos de datos',
+      body: `<p class="lesson-p">Python tiene 4 tipos básicos que usarás en el 90% del código:</p>
+      <div class="concepts">
+        <div class="concept-card"><span class="cc-badge badge-green">str</span><div class="cc-title">Texto</div><div class="cc-val">"Hola" / 'Python'</div><div class="cc-desc">Siempre entre comillas. Simple o doble, indistinto.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-blue">int</span><div class="cc-title">Entero</div><div class="cc-val">42 / -10 / 0</div><div class="cc-desc">Números sin punto decimal. Sin límite de tamaño.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-amber">float</span><div class="cc-title">Decimal</div><div class="cc-val">3.14 / -0.5</div><div class="cc-desc">Coma flotante. Cuidado con la precisión en cálculos financieros.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-purple">bool</span><div class="cc-title">Lógico</div><div class="cc-val">True / False</div><div class="cc-desc">Con mayúscula. Es una subclase de int (True=1, False=0).</div></div>
+      </div>`,
+      code: { lang: 'python', src: `<span class="cm"># Verificar tipo</span>\n<span class="fn">print</span>(<span class="fn">type</span>(<span class="num">42</span>))         <span class="cm"># &lt;class 'int'&gt;</span>\n<span class="fn">print</span>(<span class="fn">type</span>(<span class="str">"hola"</span>))      <span class="cm"># &lt;class 'str'&gt;</span>\n\n<span class="cm"># Conversión de tipos</span>\nnumero = <span class="fn">int</span>(<span class="str">"10"</span>)      <span class="cm"># str → int</span>\ntexto  = <span class="fn">str</span>(<span class="num">42</span>)        <span class="cm"># int → str</span>\ndecimal= <span class="fn">float</span>(<span class="str">"3.14"</span>)  <span class="cm"># str → float</span>` },
+      editor: { id: 'e1c', default: 'precio = "99.99"\nprint(type(precio))\n# Convertilo a float y calculá el total con 3 unidades\nprecio_num = float(precio)\ntotal = precio_num * 3\nprint("Total:", total)' },
+      quiz: { q: '¿Qué tipo de dato es precio = "29.99"?', opts: ['float', 'int', 'str', 'bool'], correct: 2, ok: '¡Correcto! Las comillas hacen que sea str aunque parezca un número.', fail: 'Las comillas lo convierten en str. Para que sea float habría que escribir precio = 29.99 (sin comillas).' }
+    },
+    {
+      label: 'Operadores',
+      title: 'Operadores',
+      body: `<p class="lesson-p">Las operaciones que podés hacer con tus datos. Los aritméticos son los más usados, pero los de comparación son fundamentales para el control de flujo.</p>
+      <table class="ref-table"><thead><tr><th>Operador</th><th>Descripción</th><th>Ejemplo</th><th>Resultado</th></tr></thead><tbody>
+      <tr><td>+</td><td>Suma / concatena strings</td><td>"a" + "b"</td><td>"ab"</td></tr>
+      <tr><td>-  *  /</td><td>Resta, multiplica, divide</td><td>10 / 3</td><td>3.333...</td></tr>
+      <tr><td>//</td><td>División entera</td><td>10 // 3</td><td>3</td></tr>
+      <tr><td>%</td><td>Módulo (resto)</td><td>10 % 3</td><td>1</td></tr>
+      <tr><td>**</td><td>Potencia</td><td>2 ** 8</td><td>256</td></tr>
+      <tr><td>== != > < >= <=</td><td>Comparación</td><td>10 == 10</td><td>True</td></tr>
+      </tbody></table>`,
+      code: { lang: 'python', src: `<span class="cm"># f-strings: la forma moderna de formatear</span>\nnombre = <span class="str">"Carlos"</span>\nedad = <span class="num">30</span>\n<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Hola {nombre}, en 10 años tendrás {edad + 10}"</span>)\n\n<span class="cm"># Operadores útiles</span>\n<span class="fn">print</span>(<span class="num">17</span> % <span class="num">2</span> == <span class="num">0</span>)   <span class="cm"># ¿17 es par? → False</span>\n<span class="fn">print</span>(<span class="num">2</span> ** <span class="num">10</span>)        <span class="cm"># 1024</span>` },
+      editor: { id: 'e1d', default: 'precio = 1500\ndescuento = 0.20\nprecio_final = precio - (precio * descuento)\nprint(f"Precio original: ${precio}")\nprint(f"Con 20% de desc: ${precio_final}")' },
+      quiz: null
+    },
+    {
+      label: 'Input/Output',
+      title: 'Input y Output',
+      body: `<p class="lesson-p">Cómo tu programa recibe datos del usuario y muestra resultados.</p>
+      <div class="callout warn"><strong>Importante:</strong> <code style="color:var(--amber)">input()</code> siempre devuelve un string. Si necesitás un número, tenés que convertirlo con <code style="color:var(--amber)">int()</code> o <code style="color:var(--amber)">float()</code>.</div>`,
+      code: { lang: 'python', src: `<span class="cm"># print() — varias formas</span>\n<span class="fn">print</span>(<span class="str">"Texto simple"</span>)\n<span class="fn">print</span>(<span class="str">"a"</span>, <span class="str">"b"</span>, sep=<span class="str">"-"</span>)       <span class="cm"># a-b</span>\n<span class="fn">print</span>(<span class="str">"línea 1"</span>, end=<span class="str">""</span>)      <span class="cm"># sin salto</span>\n\n<span class="cm"># input() — pedir datos</span>\nnombre = <span class="fn">input</span>(<span class="str">"¿Tu nombre? "</span>)\nedad   = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"¿Tu edad? "</span>))\n<span class="fn">print</span>(<span class="fn">f</span><span class="str">"En 10 años tendrás {edad + 10}"</span>)` },
+      editor: { id: 'e1e', default: '# Simulamos input con valores fijos\nnombre = "Maria"\nedad = int("22")\npais = "Argentina"\nprint("=== Perfil ===")\nprint(f"Nombre: {nombre}")\nprint(f"Edad: {edad}")\nprint(f"País: {pais}")\nprint(f"Año de nacimiento aprox: {2025 - edad}")' },
+      quiz: { q: '¿Qué hace int(input("Número: "))?', opts: ['Muestra el número 0', 'Pide texto y lo convierte a entero', 'Pide un número como float', 'Da un error siempre'], correct: 1, ok: '¡Correcto! input() pide el dato y int() lo convierte.', fail: 'input() siempre devuelve str, y int() convierte ese str a entero.' }
+    }
+  ]
+},
+{
+  id: 'mod2',
+  title: 'Control de flujo y funciones',
+  tag: 'Módulo 2',
+  desc: 'Condicionales, bucles, funciones y manejo de errores. La lógica detrás de cualquier programa.',
+  duration: '10 horas',
+  topics: '5 temas',
+  lessons: [
+    {
+      label: 'Condicionales',
+      title: 'if / elif / else',
+      body: `<p class="lesson-p">Los condicionales permiten que tu programa tome decisiones según el estado de los datos.</p>
+      <div class="callout"><strong>Indentación:</strong> Python usa 4 espacios (o un tab) para definir bloques. No hay llaves {}. Es obligatorio y define la estructura del código.</div>`,
+      code: { lang: 'python', src: `edad = <span class="num">20</span>\n\n<span class="kw">if</span> edad >= <span class="num">18</span>:\n    <span class="fn">print</span>(<span class="str">"Mayor de edad"</span>)\n<span class="kw">elif</span> edad >= <span class="num">13</span>:\n    <span class="fn">print</span>(<span class="str">"Adolescente"</span>)\n<span class="kw">else</span>:\n    <span class="fn">print</span>(<span class="str">"Menor"</span>)\n\n<span class="cm"># Operadores lógicos</span>\n<span class="kw">if</span> edad >= <span class="num">18</span> <span class="kw">and</span> edad < <span class="num">65</span>:\n    <span class="fn">print</span>(<span class="str">"Adulto en actividad"</span>)` },
+      editor: { id: 'e2a', default: 'nota = 75\n\nif nota >= 90:\n    resultado = "Sobresaliente"\nelif nota >= 70:\n    resultado = "Aprobado"\nelif nota >= 50:\n    resultado = "Regular"\nelse:\n    resultado = "Desaprobado"\n\nprint(f"Nota: {nota} → {resultado}")' },
+      quiz: { q: '¿Qué se imprime si nota = 65?', opts: ['Sobresaliente', 'Aprobado', 'Regular', 'Desaprobado'], correct: 2, ok: '¡Correcto! 65 cumple nota >= 50 pero no las anteriores.', fail: 'Revisá los rangos: >= 90, >= 70, >= 50. El 65 cae en la tercera condición.' }
+    },
+    {
+      label: 'Bucles',
+      title: 'for y while',
+      body: `<p class="lesson-p">Los bucles repiten código. <code style="color:var(--accent)">for</code> itera sobre una secuencia; <code style="color:var(--accent)">while</code> repite mientras se cumpla una condición.</p>
+      <div class="callout tip"><strong>range(start, stop, step):</strong> genera números. <code style="color:var(--green)">range(0, 10, 2)</code> → 0, 2, 4, 6, 8</div>`,
+      code: { lang: 'python', src: `<span class="cm"># for — iterar sobre secuencia</span>\n<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):\n    <span class="fn">print</span>(i)            <span class="cm"># 0 1 2 3 4</span>\n\nfrutas = [<span class="str">"manzana"</span>, <span class="str">"pera"</span>, <span class="str">"uva"</span>]\n<span class="kw">for</span> fruta <span class="kw">in</span> frutas:\n    <span class="fn">print</span>(fruta.upper())\n\n<span class="cm"># while — condición</span>\ncontador = <span class="num">0</span>\n<span class="kw">while</span> contador < <span class="num">3</span>:\n    <span class="fn">print</span>(contador)\n    contador += <span class="num">1</span>` },
+      editor: { id: 'e2b', default: '# Tabla de multiplicar\nnumero = 7\nfor i in range(1, 11):\n    print(f"{numero} x {i} = {numero * i}")' },
+      quiz: null
+    },
+    {
+      label: 'Funciones',
+      title: 'Definición de funciones',
+      body: `<p class="lesson-p">Las funciones son bloques reutilizables de código. Son la herramienta más importante para escribir código limpio y mantenible.</p>
+      <div class="callout"><strong>DRY — Don't Repeat Yourself:</strong> si escribís el mismo código más de una vez, hacé una función.</div>`,
+      code: { lang: 'python', src: `<span class="cm"># Definición básica</span>\n<span class="kw">def</span> <span class="fn">saludar</span>(nombre):\n    <span class="kw">return</span> <span class="fn">f</span><span class="str">"Hola, {nombre}!"</span>\n\n<span class="fn">print</span>(<span class="fn">saludar</span>(<span class="str">"Ana"</span>))    <span class="cm"># Hola, Ana!</span>\n\n<span class="cm"># Parámetros con default</span>\n<span class="kw">def</span> <span class="fn">potencia</span>(base, exp=<span class="num">2</span>):\n    <span class="kw">return</span> base ** exp\n\n<span class="fn">print</span>(<span class="fn">potencia</span>(<span class="num">3</span>))       <span class="cm"># 9  (exp=2 por default)</span>\n<span class="fn">print</span>(<span class="fn">potencia</span>(<span class="num">2</span>, <span class="num">8</span>))    <span class="cm"># 256</span>` },
+      editor: { id: 'e2c', default: 'def calcular_imc(peso, altura):\n    imc = peso / (altura ** 2)\n    if imc < 18.5:\n        categoria = "Bajo peso"\n    elif imc < 25:\n        categoria = "Normal"\n    elif imc < 30:\n        categoria = "Sobrepeso"\n    else:\n        categoria = "Obesidad"\n    return round(imc, 2), categoria\n\nimc, cat = calcular_imc(70, 1.75)\nprint(f"IMC: {imc} → {cat}")' },
+      quiz: { q: '¿Qué hace return en una función?', opts: ['Imprime el resultado', 'Devuelve un valor al que la llamó', 'Termina el programa', 'Es lo mismo que print'], correct: 1, ok: '¡Correcto! return devuelve el valor para que pueda ser usado afuera.', fail: 'return devuelve un valor, print solo lo muestra. Son muy distintos.' }
+    },
+    {
+      label: 'Lambdas',
+      title: 'Funciones lambda y built-ins',
+      body: `<p class="lesson-p">Las lambdas son funciones anónimas de una línea. Muy usadas con map(), filter() y sorted().</p>`,
+      code: { lang: 'python', src: `<span class="cm"># Lambda</span>\ndoble = <span class="kw">lambda</span> x: x * <span class="num">2</span>\n<span class="fn">print</span>(<span class="fn">doble</span>(<span class="num">5</span>))           <span class="cm"># 10</span>\n\n<span class="cm"># Built-ins más usados</span>\nnumeros = [<span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>]\n<span class="fn">print</span>(<span class="fn">len</span>(numeros))        <span class="cm"># 6</span>\n<span class="fn">print</span>(<span class="fn">max</span>(numeros))        <span class="cm"># 9</span>\n<span class="fn">print</span>(<span class="fn">sum</span>(numeros))        <span class="cm"># 23</span>\n<span class="fn">print</span>(<span class="fn">sorted</span>(numeros))     <span class="cm"># [1,1,3,4,5,9]</span>\n\n<span class="cm"># map y filter</span>\npares = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> x: x%<span class="num">2</span>==<span class="num">0</span>, numeros))` },
+      editor: { id: 'e2d', default: 'nombres = ["ana", "carlos", "beatriz", "david"]\n\n# Ordenar por longitud usando lambda\norden_largo = sorted(nombres, key=lambda n: len(n))\nprint("Por largo:", orden_largo)\n\n# Capitalizar todos\ncapitalizados = list(map(lambda n: n.capitalize(), nombres))\nprint("Capitalizados:", capitalizados)' },
+      quiz: null
+    },
+    {
+      label: 'Errores',
+      title: 'Manejo de errores',
+      body: `<p class="lesson-p">Los errores (excepciones) son inevitables. Saber manejarlos es esencial para escribir código robusto.</p>
+      <div class="callout warn"><strong>Nunca uses except vacío</strong> (<code style="color:var(--amber)">except:</code> sin tipo). Captura TODO incluyendo errores del sistema. Siempre especificá el tipo de error.</div>`,
+      code: { lang: 'python', src: `<span class="kw">try</span>:\n    numero = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Ingresá un número: "</span>))\n    resultado = <span class="num">100</span> / numero\n    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"100 / {numero} = {resultado}"</span>)\n\n<span class="kw">except</span> ValueError:\n    <span class="fn">print</span>(<span class="str">"Error: ingresaste texto, no un número"</span>)\n\n<span class="kw">except</span> ZeroDivisionError:\n    <span class="fn">print</span>(<span class="str">"Error: no se puede dividir por cero"</span>)\n\n<span class="kw">finally</span>:\n    <span class="fn">print</span>(<span class="str">"Esto siempre se ejecuta"</span>)` },
+      editor: { id: 'e2e', default: 'def dividir(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return "Error: división por cero"\n    except TypeError:\n        return "Error: ambos valores deben ser números"\n\nprint(dividir(10, 2))\nprint(dividir(10, 0))\nprint(dividir(10, "x"))' },
+      quiz: { q: '¿Cuándo se ejecuta el bloque finally?', opts: ['Solo si no hay error', 'Solo si hay error', 'Siempre, haya o no error', 'Nunca es obligatorio usarlo'], correct: 2, ok: '¡Correcto! finally se ejecuta siempre, ideal para cerrar archivos o conexiones.', fail: 'finally siempre se ejecuta, sea cual sea el resultado del try/except.' }
+    }
+  ]
+},
+{
+  id: 'mod3',
+  title: 'Estructuras de datos',
+  tag: 'Módulo 3',
+  desc: 'Listas, tuplas, diccionarios y sets. Las estructuras más importantes del lenguaje.',
+  duration: '10 horas',
+  topics: '5 temas',
+  lessons: [
+    {
+      label: 'Listas',
+      title: 'Listas',
+      body: `<p class="lesson-p">La estructura más versátil de Python. Colección ordenada y mutable de cualquier tipo de datos.</p>`,
+      code: { lang: 'python', src: `frutas = [<span class="str">"manzana"</span>, <span class="str">"pera"</span>, <span class="str">"uva"</span>]\n\n<span class="cm"># Indexing (empieza en 0)</span>\n<span class="fn">print</span>(frutas[<span class="num">0</span>])         <span class="cm"># manzana</span>\n<span class="fn">print</span>(frutas[-<span class="num">1</span>])        <span class="cm"># uva (último)</span>\n\n<span class="cm"># Slicing</span>\n<span class="fn">print</span>(frutas[<span class="num">0</span>:<span class="num">2</span>])       <span class="cm"># ['manzana', 'pera']</span>\n\n<span class="cm"># Métodos principales</span>\nfrutas.append(<span class="str">"banana"</span>)  <span class="cm"># agrega al final</span>\nfrutas.insert(<span class="num">1</span>, <span class="str">"kiwi"</span>) <span class="cm"># agrega en posición</span>\nfrutas.remove(<span class="str">"pera"</span>)   <span class="cm"># elimina por valor</span>\nfrutas.sort()             <span class="cm"># ordena in-place</span>` },
+      editor: { id: 'e3a', default: 'numeros = [5, 2, 8, 1, 9, 3]\nprint("Original:", numeros)\nprint("Ordenado:", sorted(numeros))\nprint("Máximo:", max(numeros))\nprint("Suma:", sum(numeros))\nprint("Primeros 3:", numeros[:3])' },
+      quiz: { q: '¿Qué devuelve [10, 20, 30][-1]?', opts: ['10', '20', '30', 'Error'], correct: 2, ok: '¡Correcto! El índice -1 accede al último elemento.', fail: 'El índice -1 accede al último elemento de la lista, que es 30.' }
+    },
+    {
+      label: 'Tuplas',
+      title: 'Tuplas',
+      body: `<p class="lesson-p">Como las listas pero <strong style="color:var(--text)">inmutables</strong>. Una vez creadas no se pueden modificar. Se usan para datos que no deben cambiar.</p>
+      <div class="callout tip"><strong>Cuándo usar tuplas:</strong> coordenadas GPS, colores RGB, datos de configuración, retorno múltiple de funciones.</div>`,
+      code: { lang: 'python', src: `punto = (<span class="num">-34.6</span>, <span class="num">-58.4</span>)     <span class="cm"># lat, lon Buenos Aires</span>\n<span class="fn">print</span>(punto[<span class="num">0</span>])           <span class="cm"># -34.6</span>\n\n<span class="cm"># Desempaquetado</span>\nlat, lon = punto\n<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Lat: {lat}, Lon: {lon}"</span>)\n\n<span class="cm"># Retorno múltiple (es una tupla)</span>\n<span class="kw">def</span> <span class="fn">minmax</span>(lista):\n    <span class="kw">return</span> <span class="fn">min</span>(lista), <span class="fn">max</span>(lista)\n\nmenor, mayor = <span class="fn">minmax</span>([<span class="num">3</span>,<span class="num">1</span>,<span class="num">9</span>,<span class="num">5</span>])` },
+      editor: { id: 'e3b', default: 'colores_rgb = {\n    "rojo": (255, 0, 0),\n    "verde": (0, 255, 0),\n    "azul": (0, 0, 255)\n}\nfor nombre, rgb in colores_rgb.items():\n    r, g, b = rgb\n    print(f"{nombre}: R={r}, G={g}, B={b}")' },
+      quiz: null
+    },
+    {
+      label: 'Diccionarios',
+      title: 'Diccionarios',
+      body: `<p class="lesson-p">Estructura clave-valor. El equivalente de JSON en Python. Extremadamente usado en APIs, configuración y manejo de datos.</p>`,
+      code: { lang: 'python', src: `usuario = {\n    <span class="str">"nombre"</span>: <span class="str">"Ana"</span>,\n    <span class="str">"edad"</span>: <span class="num">28</span>,\n    <span class="str">"activo"</span>: <span class="kw">True</span>\n}\n\n<span class="fn">print</span>(usuario[<span class="str">"nombre"</span>])          <span class="cm"># Ana</span>\n<span class="fn">print</span>(usuario.get(<span class="str">"email"</span>, <span class="str">"N/A"</span>)) <span class="cm"># N/A (no rompe)</span>\n\nusuario[<span class="str">"email"</span>] = <span class="str">"ana@mail.com"</span>   <span class="cm"># agregar</span>\n\n<span class="cm"># Iterar</span>\n<span class="kw">for</span> clave, valor <span class="kw">in</span> usuario.items():\n    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"{clave}: {valor}"</span>)` },
+      editor: { id: 'e3c', default: 'inventario = {\n    "manzanas": 50,\n    "peras": 30,\n    "uvas": 80\n}\n# Agregar item\ninventario["bananas"] = 45\n# Total de productos\ntotal = sum(inventario.values())\nprint(f"Productos: {list(inventario.keys())}")\nprint(f"Total unidades: {total}")' },
+      quiz: { q: '¿Qué hace dict.get("clave", "default")?', opts: ['Lanza un error si no existe', 'Devuelve "default" si la clave no existe', 'Agrega la clave al dict', 'Es igual a dict["clave"]'], correct: 1, ok: '¡Correcto! .get() es seguro — devuelve el default en vez de lanzar KeyError.', fail: '.get() devuelve el valor por defecto si la clave no existe, sin lanzar error.' }
+    },
+    {
+      label: 'Sets',
+      title: 'Sets (conjuntos)',
+      body: `<p class="lesson-p">Colecciones sin duplicados y sin orden. Muy eficientes para operaciones de conjuntos y para eliminar duplicados.</p>`,
+      code: { lang: 'python', src: `<span class="cm"># Eliminar duplicados de una lista</span>\nlista = [<span class="num">1</span>,<span class="num">2</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">3</span>,<span class="num">3</span>]\nunicos = <span class="fn">list</span>(<span class="fn">set</span>(lista))    <span class="cm"># [1, 2, 3]</span>\n\n<span class="cm"># Operaciones de conjunto</span>\na = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>}\nb = {<span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>}\n\n<span class="fn">print</span>(a | b)   <span class="cm"># Unión: {1,2,3,4,5,6}</span>\n<span class="fn">print</span>(a & b)   <span class="cm"># Intersección: {3,4}</span>\n<span class="fn">print</span>(a - b)   <span class="cm"># Diferencia: {1,2}</span>` },
+      editor: { id: 'e3d', default: 'visitas_hoy = ["ana", "carlos", "ana", "beatriz", "carlos", "ana"]\nvisitas_ayer = ["carlos", "diana", "eduardo"]\n\nusuarios_unicos_hoy = set(visitas_hoy)\nusuarios_nuevos = usuarios_unicos_hoy - set(visitas_ayer)\n\nprint(f"Visitas únicas hoy: {len(usuarios_unicos_hoy)}")\nprint(f"Usuarios nuevos: {usuarios_nuevos}")' },
+      quiz: null
+    },
+    {
+      label: 'Comprehensions',
+      title: 'List y Dict comprehensions',
+      body: `<p class="lesson-p">Forma concisa y pythónica de crear listas o diccionarios. Muy valorada en entrevistas técnicas.</p>
+      <div class="callout tip"><strong>Regla de oro:</strong> si la comprehension necesita más de una condición o más de una línea de lógica, mejor usá un bucle for tradicional. La legibilidad importa.</div>`,
+      code: { lang: 'python', src: `<span class="cm"># Sin comprehension</span>\ncuadrados = []\n<span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>):\n    cuadrados.append(x**<span class="num">2</span>)\n\n<span class="cm"># Con list comprehension</span>\ncuadrados = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]\n\n<span class="cm"># Con filtro</span>\npares = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>) <span class="kw">if</span> x%<span class="num">2</span>==<span class="num">0</span>]\n\n<span class="cm"># Dict comprehension</span>\nnombres = [<span class="str">"ana"</span>, <span class="str">"beto"</span>, <span class="str">"carlos"</span>]\nlongitudes = {n: <span class="fn">len</span>(n) <span class="kw">for</span> n <span class="kw">in</span> nombres}` },
+      editor: { id: 'e3e', default: 'precios = {"manzana": 150, "pera": 200, "uva": 350, "kiwi": 500}\n\n# Productos que cuestan menos de 300\nbaratos = {k: v for k, v in precios.items() if v < 300}\nprint("Baratos:", baratos)\n\n# Precios con 10% de descuento\ncon_desc = {k: round(v * 0.9, 2) for k, v in precios.items()}\nprint("Con 10% desc:", con_desc)' },
+      quiz: { q: '¿Qué produce [x*2 for x in range(4)]?', opts: ['[0, 2, 4, 6]', '[2, 4, 6, 8]', '[1, 2, 3, 4]', '[0, 1, 2, 3]'], correct: 0, ok: '¡Correcto! range(4) da 0,1,2,3 y cada uno se multiplica por 2.', fail: 'range(4) produce 0,1,2,3. Multiplicados por 2: 0,2,4,6.' }
+    }
+  ]
+},
+{
+  id: 'mod4',
+  title: 'Programación orientada a objetos',
+  tag: 'Módulo 4',
+  desc: 'Clases, objetos, herencia y polimorfismo. El paradigma dominante en el mercado.',
+  duration: '12 horas',
+  topics: '4 temas',
+  lessons: [
+    {
+      label: 'Clases',
+      title: 'Clases y objetos',
+      body: `<p class="lesson-p">Una clase es un molde. Un objeto es una instancia de ese molde con sus propios datos.</p>
+      <div class="callout"><strong>self</strong> es la referencia al objeto actual. Siempre es el primer parámetro de los métodos.</div>`,
+      code: { lang: 'python', src: `<span class="kw">class</span> <span class="cls">Persona</span>:\n    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, nombre, edad):\n        <span class="kw">self</span>.nombre = nombre\n        <span class="kw">self</span>.edad = edad\n\n    <span class="kw">def</span> <span class="fn">presentarse</span>(<span class="kw">self</span>):\n        <span class="kw">return</span> <span class="fn">f</span><span class="str">"Hola, soy {self.nombre}, {self.edad} años"</span>\n\n    <span class="kw">def</span> <span class="fn">__repr__</span>(<span class="kw">self</span>):\n        <span class="kw">return</span> <span class="fn">f</span><span class="str">"Persona({self.nombre!r}, {self.edad})"</span>\n\nana = <span class="cls">Persona</span>(<span class="str">"Ana"</span>, <span class="num">28</span>)\n<span class="fn">print</span>(ana.presentarse())` },
+      editor: { id: 'e4a', default: 'class CuentaBancaria:\n    def __init__(self, titular, saldo=0):\n        self.titular = titular\n        self.saldo = saldo\n\n    def depositar(self, monto):\n        self.saldo += monto\n        print(f"Depósito: ${monto}. Saldo: ${self.saldo}")\n\n    def retirar(self, monto):\n        if monto > self.saldo:\n            print("Saldo insuficiente")\n        else:\n            self.saldo -= monto\n            print(f"Retiro: ${monto}. Saldo: ${self.saldo}")\n\ncuenta = CuentaBancaria("Ana", 1000)\ncuenta.depositar(500)\ncuenta.retirar(200)\ncuenta.retirar(2000)' },
+      quiz: { q: '¿Para qué sirve __init__?', opts: ['Para destruir el objeto', 'Para inicializar el objeto al crearlo', 'Para imprimir el objeto', 'Es opcional y no hace nada'], correct: 1, ok: '¡Correcto! __init__ es el constructor, se ejecuta al crear la instancia.', fail: '__init__ es el constructor: se ejecuta automáticamente al crear el objeto.' }
+    },
+    {
+      label: 'Herencia',
+      title: 'Herencia',
+      body: `<p class="lesson-p">Una clase puede heredar atributos y métodos de otra. Permite reutilizar código y crear jerarquías.</p>`,
+      code: { lang: 'python', src: `<span class="kw">class</span> <span class="cls">Animal</span>:\n    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, nombre):\n        <span class="kw">self</span>.nombre = nombre\n\n    <span class="kw">def</span> <span class="fn">hablar</span>(<span class="kw">self</span>):\n        <span class="kw">return</span> <span class="str">"..."</span>\n\n<span class="kw">class</span> <span class="cls">Perro</span>(<span class="cls">Animal</span>):          <span class="cm"># hereda de Animal</span>\n    <span class="kw">def</span> <span class="fn">hablar</span>(<span class="kw">self</span>):            <span class="cm"># sobreescribe</span>\n        <span class="kw">return</span> <span class="str">"Guau!"</span>\n\n<span class="kw">class</span> <span class="cls">Gato</span>(<span class="cls">Animal</span>):\n    <span class="kw">def</span> <span class="fn">hablar</span>(<span class="kw">self</span>):\n        <span class="kw">return</span> <span class="str">"Miau!"</span>\n\nanimals = [<span class="cls">Perro</span>(<span class="str">"Rex"</span>), <span class="cls">Gato</span>(<span class="str">"Luna"</span>)]\n<span class="kw">for</span> a <span class="kw">in</span> animals:\n    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"{a.nombre}: {a.hablar()}"</span>)` },
+      editor: { id: 'e4b', default: 'class Vehiculo:\n    def __init__(self, marca, modelo):\n        self.marca = marca\n        self.modelo = modelo\n    def info(self):\n        return f"{self.marca} {self.modelo}"\n\nclass Auto(Vehiculo):\n    def __init__(self, marca, modelo, puertas=4):\n        super().__init__(marca, modelo)\n        self.puertas = puertas\n    def info(self):\n        return f"{super().info()} ({self.puertas} puertas)"\n\nauto = Auto("Toyota", "Corolla")\nprint(auto.info())' },
+      quiz: null
+    },
+    {
+      label: 'Propiedades',
+      title: 'Encapsulamiento y propiedades',
+      body: `<p class="lesson-p">El encapsulamiento protege el estado interno del objeto. Python usa convenciones (no modificadores de acceso como Java).</p>
+      <table class="ref-table"><thead><tr><th>Convención</th><th>Significado</th><th>Ejemplo</th></tr></thead><tbody>
+      <tr><td>nombre</td><td>Público (por defecto)</td><td>self.nombre</td></tr>
+      <tr><td>_nombre</td><td>Protegido (convención)</td><td>self._saldo</td></tr>
+      <tr><td>__nombre</td><td>Privado (name mangling)</td><td>self.__password</td></tr>
+      </tbody></table>`,
+      code: { lang: 'python', src: `<span class="kw">class</span> <span class="cls">Temperatura</span>:\n    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, celsius):\n        <span class="kw">self</span>._celsius = celsius\n\n    <span class="op">@property</span>\n    <span class="kw">def</span> <span class="fn">celsius</span>(<span class="kw">self</span>):\n        <span class="kw">return</span> <span class="kw">self</span>._celsius\n\n    <span class="op">@celsius</span>.setter\n    <span class="kw">def</span> <span class="fn">celsius</span>(<span class="kw">self</span>, valor):\n        <span class="kw">if</span> valor < -<span class="num">273.15</span>:\n            <span class="kw">raise</span> ValueError(<span class="str">"Temperatura inválida"</span>)\n        <span class="kw">self</span>._celsius = valor\n\n    <span class="op">@property</span>\n    <span class="kw">def</span> <span class="fn">fahrenheit</span>(<span class="kw">self</span>):\n        <span class="kw">return</span> <span class="kw">self</span>._celsius * <span class="num">9</span>/<span class="num">5</span> + <span class="num">32</span>` },
+      editor: { id: 'e4c', default: 'class Temperatura:\n    def __init__(self, celsius):\n        self._celsius = celsius\n\n    @property\n    def celsius(self):\n        return self._celsius\n\n    @property\n    def fahrenheit(self):\n        return self._celsius * 9/5 + 32\n\n    @property\n    def kelvin(self):\n        return self._celsius + 273.15\n\nt = Temperatura(100)\nprint(f"Celsius: {t.celsius}")\nprint(f"Fahrenheit: {t.fahrenheit}")\nprint(f"Kelvin: {t.kelvin}")' },
+      quiz: null
+    },
+    {
+      label: 'SOLID',
+      title: 'Buenas prácticas en POO',
+      body: `<p class="lesson-p">Principios que hacen tu código mantenible. No necesitás aplicarlos todos desde el día 1, pero sí conocerlos.</p>
+      <div class="concepts">
+        <div class="concept-card"><span class="cc-badge badge-blue">S</span><div class="cc-title">Single Responsibility</div><div class="cc-desc">Cada clase hace UNA cosa y la hace bien.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-green">O</span><div class="cc-title">Open/Closed</div><div class="cc-desc">Abierto a extensión, cerrado a modificación.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-amber">L</span><div class="cc-title">Liskov Substitution</div><div class="cc-desc">Las subclases deben reemplazar a sus padres sin romper nada.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-purple">I</span><div class="cc-title">Interface Segregation</div><div class="cc-desc">Interfaces pequeñas y específicas son mejores que una grande.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-pink">D</span><div class="cc-title">Dependency Inversion</div><div class="cc-desc">Depender de abstracciones, no de implementaciones concretas.</div></div>
+      </div>`,
+      code: { lang: 'python', src: `<span class="cm"># MAL: clase con múltiples responsabilidades</span>\n<span class="kw">class</span> <span class="cls">Usuario</span>:\n    <span class="kw">def</span> <span class="fn">guardar_en_db</span>(<span class="kw">self</span>): ...\n    <span class="kw">def</span> <span class="fn">enviar_email</span>(<span class="kw">self</span>): ...\n    <span class="kw">def</span> <span class="fn">generar_reporte</span>(<span class="kw">self</span>): ...\n\n<span class="cm"># BIEN: cada clase tiene una responsabilidad</span>\n<span class="kw">class</span> <span class="cls">Usuario</span>: ...\n<span class="kw">class</span> <span class="cls">UsuarioRepository</span>: ...\n<span class="kw">class</span> <span class="cls">EmailService</span>: ...\n<span class="kw">class</span> <span class="cls">ReporteService</span>: ...` },
+      editor: { id: 'e4d', default: 'class Figura:\n    def area(self):\n        raise NotImplementedError\n\nclass Circulo(Figura):\n    def __init__(self, radio):\n        self.radio = radio\n    def area(self):\n        return round(3.14159 * self.radio ** 2, 2)\n\nclass Rectangulo(Figura):\n    def __init__(self, ancho, alto):\n        self.ancho = ancho\n        self.alto = alto\n    def area(self):\n        return self.ancho * self.alto\n\nfiguras = [Circulo(5), Rectangulo(4, 6), Circulo(3)]\nfor f in figuras:\n    print(f"{f.__class__.__name__}: área = {f.area()}")' },
+      quiz: { q: '¿Qué principio SOLID dice que cada clase debe tener una sola razón para cambiar?', opts: ['Open/Closed', 'Single Responsibility', 'Liskov Substitution', 'Dependency Inversion'], correct: 1, ok: '¡Correcto! SRP: una clase = una responsabilidad = una razón para cambiar.', fail: 'Es el principio S — Single Responsibility: una clase, una responsabilidad.' }
+    }
+  ]
+},
+{
+  id: 'mod5',
+  title: 'Archivos y librerías',
+  tag: 'Módulo 5',
+  desc: 'Leer y escribir archivos, JSON, CSV, entornos virtuales y los módulos más usados.',
+  duration: '8 horas',
+  topics: '4 temas',
+  lessons: [
+    {
+      label: 'Archivos',
+      title: 'Manejo de archivos',
+      body: `<p class="lesson-p">Leer y escribir archivos es una tarea cotidiana. Python lo hace muy simple.</p>
+      <div class="callout tip"><strong>Siempre usá with:</strong> el context manager cierra el archivo automáticamente, incluso si hay un error.</div>`,
+      code: { lang: 'python', src: `<span class="cm"># Leer archivo completo</span>\n<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"datos.txt"</span>, <span class="str">"r"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:\n    contenido = f.read()\n\n<span class="cm"># Leer línea por línea</span>\n<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"datos.txt"</span>) <span class="kw">as</span> f:\n    <span class="kw">for</span> linea <span class="kw">in</span> f:\n        <span class="fn">print</span>(linea.strip())\n\n<span class="cm"># Escribir archivo</span>\n<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"salida.txt"</span>, <span class="str">"w"</span>) <span class="kw">as</span> f:\n    f.write(<span class="str">"Hola mundo\\n"</span>)\n    f.writelines([<span class="str">"línea 1\\n"</span>, <span class="str">"línea 2\\n"</span>])` },
+      editor: { id: 'e5a', default: 'import io\n\n# Simulamos escribir y leer un archivo en memoria\nbuffer = io.StringIO()\nbuffer.write("Python\\n")\nbuffer.write("es genial\\n")\nbuffer.write("y muy usado\\n")\n\nbuffer.seek(0)\nlineas = buffer.readlines()\nprint(f"Líneas: {len(lineas)}")\nfor i, linea in enumerate(lineas, 1):\n    print(f"{i}: {linea.strip()}")' },
+      quiz: null
+    },
+    {
+      label: 'JSON y CSV',
+      title: 'JSON y CSV',
+      body: `<p class="lesson-p">Los dos formatos de datos más usados en el mercado. JSON para APIs, CSV para datos tabulares y Excel.</p>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> json\n<span class="kw">import</span> csv\n\n<span class="cm"># JSON — convertir dict ↔ JSON</span>\ndatos = {<span class="str">"nombre"</span>: <span class="str">"Ana"</span>, <span class="str">"edad"</span>: <span class="num">28</span>}\njson_str = json.dumps(datos, indent=<span class="num">2</span>)\nde_vuelta = json.loads(json_str)\n\n<span class="cm"># Guardar/leer archivo JSON</span>\n<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"datos.json"</span>, <span class="str">"w"</span>) <span class="kw">as</span> f:\n    json.dump(datos, f)\n\n<span class="cm"># CSV</span>\n<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"datos.csv"</span>, <span class="str">"w"</span>, newline=<span class="str">""</span>) <span class="kw">as</span> f:\n    writer = csv.DictWriter(f, fieldnames=[<span class="str">"nombre"</span>,<span class="str">"edad"</span>])\n    writer.writeheader()\n    writer.writerow({<span class="str">"nombre"</span>:<span class="str">"Ana"</span>, <span class="str">"edad"</span>:<span class="num">28</span>})` },
+      editor: { id: 'e5b', default: 'import json\n\nusuarios = [\n    {"nombre": "Ana", "edad": 28, "activo": True},\n    {"nombre": "Carlos", "edad": 35, "activo": False},\n    {"nombre": "Beto", "edad": 22, "activo": True}\n]\n\njson_str = json.dumps(usuarios, indent=2, ensure_ascii=False)\nprint(json_str)\n\nactivos = [u["nombre"] for u in usuarios if u["activo"]]\nprint("Activos:", activos)' },
+      quiz: { q: '¿Qué función convierte un dict de Python a string JSON?', opts: ['json.load()', 'json.loads()', 'json.dump()', 'json.dumps()'], correct: 3, ok: '¡Correcto! dumps = "dump to string". dump (sin s) escribe a archivo.', fail: 'json.dumps() convierte a string. La s al final significa "string".' }
+    },
+    {
+      label: 'Librerías',
+      title: 'Librerías estándar esenciales',
+      body: `<p class="lesson-p">Python viene con baterías incluidas. Estas librerías se usan en casi todos los proyectos reales.</p>
+      <div class="concepts">
+        <div class="concept-card"><span class="cc-badge badge-blue">os</span><div class="cc-title">Sistema operativo</div><div class="cc-desc">Rutas, directorios, variables de entorno, ejecución de comandos.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-green">datetime</span><div class="cc-title">Fechas y tiempos</div><div class="cc-desc">Crear, parsear y operar con fechas. timedelta para diferencias.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-amber">pathlib</span><div class="cc-title">Rutas modernas</div><div class="cc-desc">La forma moderna de manejar rutas. Reemplaza os.path.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-purple">re</span><div class="cc-title">Expresiones regulares</div><div class="cc-desc">Búsqueda y extracción de patrones en strings.</div></div>
+      </div>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> os\n<span class="kw">from</span> pathlib <span class="kw">import</span> Path\n<span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta\n\n<span class="cm"># Rutas multiplataforma</span>\np = Path(<span class="str">"datos"</span>) / <span class="str">"archivo.csv"</span>\n<span class="fn">print</span>(p.suffix)          <span class="cm"># .csv</span>\n<span class="fn">print</span>(p.stem)            <span class="cm"># archivo</span>\n\n<span class="cm"># Fechas</span>\nhoy = datetime.now()\nmañana = hoy + timedelta(days=<span class="num">1</span>)\n<span class="fn">print</span>(hoy.strftime(<span class="str">"%d/%m/%Y"</span>))\n\n<span class="cm"># Variables de entorno</span>\ndb_url = os.getenv(<span class="str">"DATABASE_URL"</span>, <span class="str">"localhost"</span>)` },
+      editor: { id: 'e5c', default: 'from datetime import datetime, timedelta\n\nhoy = datetime(2025, 6, 15)\nprint(f"Hoy: {hoy.strftime(\"%d/%m/%Y\")}")\nprint(f"Día de la semana: {hoy.strftime(\"%A\")}")\n\nvencimiento = hoy + timedelta(days=30)\nprint(f"Vence: {vencimiento.strftime(\"%d/%m/%Y\")}")\n\ndias_restantes = (vencimiento - hoy).days\nprint(f"Días restantes: {dias_restantes}")' },
+      quiz: null
+    },
+    {
+      label: 'venv y pip',
+      title: 'Entornos virtuales y pip',
+      body: `<p class="lesson-p">Los entornos virtuales aíslan las dependencias de cada proyecto. En equipos y en producción son obligatorios.</p>
+      <div class="callout warn"><strong>Nunca instalés paquetes globalmente</strong> en proyectos reales. Siempre activá el venv primero.</div>`,
+      code: { lang: 'bash', src: `<span class="cm"># Crear entorno virtual</span>\npython -m venv venv\n\n<span class="cm"># Activar (Windows)</span>\nvenv\\Scripts\\activate\n\n<span class="cm"># Activar (Mac/Linux)</span>\nsource venv/bin/activate\n\n<span class="cm"># Instalar paquetes</span>\npip install requests pandas matplotlib\n\n<span class="cm"># Guardar dependencias</span>\npip freeze > requirements.txt\n\n<span class="cm"># Instalar desde requirements.txt</span>\npip install -r requirements.txt` },
+      editor: { id: 'e5d', default: '# requirements.txt típico de un proyecto real\nrequerimientos = """\nrequests==2.31.0\npandas==2.1.0\nmatplotlib==3.8.0\npython-dotenv==1.0.0\nsqlalchemy==2.0.0\nfastapi==0.104.0\nuvicorn==0.24.0\npytest==7.4.0\n"""\nfor linea in requerimientos.strip().split("\\n"):\n    paquete, version = linea.split("==")\n    print(f"  {paquete:<20} v{version}")' },
+      quiz: { q: '¿Qué hace pip freeze > requirements.txt?', opts: ['Instala dependencias del archivo', 'Guarda las dependencias actuales a un archivo', 'Borra los paquetes instalados', 'Actualiza todos los paquetes'], correct: 1, ok: '¡Correcto! Permite reproducir el mismo entorno en otra máquina.', fail: 'pip freeze lista lo instalado, y > lo redirige al archivo requirements.txt.' }
+    }
+  ]
+},
+{
+  id: 'mod6',
+  title: 'Análisis de datos',
+  tag: 'Módulo 6',
+  desc: 'NumPy, Pandas y visualización con Matplotlib. El skill más demandado del mercado.',
+  duration: '12 horas',
+  topics: '4 temas',
+  lessons: [
+    {
+      label: 'NumPy',
+      title: 'NumPy — arrays y operaciones',
+      body: `<p class="lesson-p">NumPy es la base de todo el ecosistema de datos en Python. Provee arrays multidimensionales y operaciones matemáticas vectorizadas (mucho más rápidas que los bucles).</p>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> numpy <span class="kw">as</span> np\n\n<span class="cm"># Arrays</span>\na = np.array([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>])\n<span class="fn">print</span>(a * <span class="num">2</span>)          <span class="cm"># [2 4 6 8 10]</span>\n<span class="fn">print</span>(a.mean())       <span class="cm"># 3.0</span>\n<span class="fn">print</span>(a.std())        <span class="cm"># desviación estándar</span>\n\n<span class="cm"># Array 2D (matriz)</span>\nmatriz = np.zeros((<span class="num">3</span>, <span class="num">3</span>))\nidentidad = np.eye(<span class="num">3</span>)\n\n<span class="cm"># Filtrado vectorizado</span>\ngrandes = a[a > <span class="num">3</span>]    <span class="cm"># [4 5]</span>` },
+      editor: { id: 'e6a', default: 'import numpy as np\n\nventas = np.array([1500, 2300, 1800, 3100, 2750, 900, 4200])\ndias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]\n\nprint(f"Total: ${ventas.sum():,}")\nprint(f"Promedio: ${ventas.mean():.0f}")\nprint(f"Mejor día: {dias[ventas.argmax()]} (${ventas.max():,})")\nprint(f"Peor día: {dias[ventas.argmin()]} (${ventas.min():,})")\nprint(f"Días sobre promedio: {(ventas > ventas.mean()).sum()}")' },
+      quiz: null
+    },
+    {
+      label: 'Pandas',
+      title: 'Pandas — DataFrames',
+      body: `<p class="lesson-p">Pandas es el estándar para análisis de datos en Python. Un DataFrame es como una tabla de Excel pero en código — con superpoderes.</p>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> pandas <span class="kw">as</span> pd\n\n<span class="cm"># Crear DataFrame</span>\ndf = pd.DataFrame({\n    <span class="str">"nombre"</span>: [<span class="str">"Ana"</span>, <span class="str">"Beto"</span>, <span class="str">"Carlos"</span>],\n    <span class="str">"edad"</span>: [<span class="num">28</span>, <span class="num">35</span>, <span class="num">22</span>],\n    <span class="str">"ventas"</span>: [<span class="num">15000</span>, <span class="num">22000</span>, <span class="num">9500</span>]\n})\n\n<span class="cm"># Explorar</span>\n<span class="fn">print</span>(df.head())         <span class="cm"># primeras filas</span>\n<span class="fn">print</span>(df.describe())     <span class="cm"># estadísticas</span>\n<span class="fn">print</span>(df.dtypes)         <span class="cm"># tipos de columnas</span>\n\n<span class="cm"># Filtrar</span>\nsenior = df[df[<span class="str">"edad"</span>] > <span class="num">30</span>]` },
+      editor: { id: 'e6b', default: 'import pandas as pd\n\ndf = pd.DataFrame({\n    "producto": ["Laptop", "Mouse", "Teclado", "Monitor", "Auriculares"],\n    "precio": [150000, 8000, 12000, 95000, 25000],\n    "stock": [10, 45, 30, 8, 22],\n    "categoria": ["PC", "PC", "PC", "PC", "Audio"]\n})\n\nprint("=== Resumen ===")\nprint(f"Valor total inventario: ${(df.precio * df.stock).sum():,}")\nprint(f"\\nPor categoría:")\nprint(df.groupby("categoria")["precio"].mean().round(0))' },
+      quiz: { q: '¿Qué hace df[df["precio"] > 1000]?', opts: ['Elimina filas donde precio > 1000', 'Filtra y devuelve solo filas donde precio > 1000', 'Cambia los precios a 1000', 'Cuenta cuántos precios hay sobre 1000'], correct: 1, ok: '¡Correcto! Es la sintaxis de filtrado booleano de Pandas.', fail: 'Esa sintaxis aplica una máscara booleana y devuelve solo las filas que cumplen la condición.' }
+    },
+    {
+      label: 'Limpieza',
+      title: 'Limpieza de datos',
+      body: `<p class="lesson-p">En el trabajo real, el 70-80% del tiempo de análisis se va en limpiar datos. Valores nulos, duplicados, tipos incorrectos.</p>`,
+      code: { lang: 'python', src: `<span class="cm"># Detectar nulos</span>\n<span class="fn">print</span>(df.isnull().<span class="fn">sum</span>())\n\n<span class="cm"># Rellenar nulos</span>\ndf[<span class="str">"edad"</span>].fillna(df[<span class="str">"edad"</span>].median(), inplace=<span class="kw">True</span>)\n\n<span class="cm"># Eliminar filas con nulos</span>\ndf.dropna(subset=[<span class="str">"nombre"</span>], inplace=<span class="kw">True</span>)\n\n<span class="cm"># Duplicados</span>\ndf.drop_duplicates(inplace=<span class="kw">True</span>)\n\n<span class="cm"># Cambiar tipos</span>\ndf[<span class="str">"precio"</span>] = pd.to_numeric(df[<span class="str">"precio"</span>], errors=<span class="str">"coerce"</span>)\ndf[<span class="str">"fecha"</span>] = pd.to_datetime(df[<span class="str">"fecha"</span>])\n\n<span class="cm"># Normalizar strings</span>\ndf[<span class="str">"nombre"</span>] = df[<span class="str">"nombre"</span>].<span class="fn">str</span>.strip().str.lower()` },
+      editor: { id: 'e6c', default: 'import pandas as pd\nimport numpy as np\n\ndf = pd.DataFrame({\n    "nombre": ["Ana", "Beto", None, "Ana", "Carlos"],\n    "edad": [28, None, 35, 28, 22],\n    "ciudad": [" Buenos Aires", "Cordoba ", "Rosario", "Buenos Aires", None]\n})\n\nprint("Antes de limpiar:")\nprint(df)\nprint(f"\\nNulos: {df.isnull().sum().sum()}")\ndf.dropna(inplace=True)\ndf.drop_duplicates(inplace=True)\ndf["ciudad"] = df["ciudad"].str.strip()\nprint("\\nDespués de limpiar:")\nprint(df)' },
+      quiz: null
+    },
+    {
+      label: 'Visualización',
+      title: 'Visualización con Matplotlib',
+      body: `<p class="lesson-p">Ver los datos es fundamental para entenderlos y comunicarlos. Matplotlib es la base; Seaborn agrega estética.</p>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt\n\n<span class="cm"># Gráfico de línea</span>\nx = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]\ny = [<span class="num">2</span>, <span class="num">4</span>, <span class="num">6</span>, <span class="num">8</span>, <span class="num">10</span>]\nplt.plot(x, y, label=<span class="str">"ventas"</span>, color=<span class="str">"blue"</span>)\nplt.title(<span class="str">"Ventas mensuales"</span>)\nplt.xlabel(<span class="str">"Mes"</span>); plt.ylabel(<span class="str">"Valor"</span>)\nplt.legend(); plt.grid(<span class="kw">True</span>)\nplt.show()\n\n<span class="cm"># Barras, dispersión, histograma</span>\nplt.bar(categorias, valores)\nplt.scatter(x, y, c=colores)\nplt.hist(datos, bins=<span class="num">20</span>)` },
+      editor: { id: 'e6d', default: '# Simulación de análisis de ventas\nimport json\n\nventas_mensuales = {\n    "Enero": 45000, "Febrero": 52000, "Marzo": 48000,\n    "Abril": 61000, "Mayo": 73000, "Junio": 68000\n}\n\ntotal = sum(ventas_mensuales.values())\npromedio = total / len(ventas_mensuales)\nmejor = max(ventas_mensuales, key=ventas_mensuales.get)\n\nprint("=== Reporte de Ventas H1 ===")\nfor mes, valor in ventas_mensuales.items():\n    barra = "█" * (valor // 5000)\n    print(f"{mes:<10} ${valor:>7,} {barra}")\nprint(f"\\nTotal: ${total:,}")\nprint(f"Promedio: ${promedio:,.0f}")\nprint(f"Mejor mes: {mejor}")' },
+      quiz: null
+    }
+  ]
+},
+{
+  id: 'mod7',
+  title: 'Automatización y Web Scraping',
+  tag: 'Módulo 7',
+  desc: 'Requests, BeautifulSoup y Selenium. Extraer y automatizar datos de la web.',
+  duration: '10 horas',
+  topics: '4 temas',
+  lessons: [
+    {
+      label: 'Requests',
+      title: 'APIs REST con Requests',
+      body: `<p class="lesson-p">Consumir APIs es una de las habilidades más demandadas. Requests hace que sea increíblemente simple.</p>
+      <div class="callout"><strong>API REST:</strong> interfaz para intercambiar datos. GET para obtener, POST para enviar, PUT/PATCH para actualizar, DELETE para eliminar.</div>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> requests\n\n<span class="cm"># GET — obtener datos</span>\nresponse = requests.get(\n    <span class="str">"https://api.github.com/users/torvalds"</span>\n)\n\n<span class="fn">print</span>(response.status_code)   <span class="cm"># 200</span>\ndatos = response.json()         <span class="cm"># dict</span>\n<span class="fn">print</span>(datos[<span class="str">"name"</span>])\n\n<span class="cm"># Con headers y params</span>\nheaders = {<span class="str">"Authorization"</span>: <span class="str">"Bearer TOKEN"</span>}\nparams  = {<span class="str">"page"</span>: <span class="num">1</span>, <span class="str">"per_page"</span>: <span class="num">10</span>}\nr = requests.get(url, headers=headers, params=params)\nr.raise_for_status()           <span class="cm"># lanza excepción si 4xx/5xx</span>` },
+      editor: { id: 'e7a', default: '# Simulamos una respuesta de API\nimport json\n\nrespuesta_api = {\n    "status": 200,\n    "data": [\n        {"id": 1, "titulo": "Python para todos", "precio": 4999},\n        {"id": 2, "titulo": "Data Science con Python", "precio": 7999},\n        {"id": 3, "titulo": "APIs con FastAPI", "precio": 5999}\n    ]\n}\n\nproductos = respuesta_api["data"]\nprint(f"Total productos: {len(productos)}")\nfor p in productos:\n    print(f"  [{p[\'id\']}] {p[\'titulo\']} — ${p[\'precio\']:,}")' },
+      quiz: { q: '¿Qué código HTTP indica éxito en una petición?', opts: ['404', '500', '200', '301'], correct: 2, ok: '¡Correcto! 200 OK es la respuesta estándar de éxito.', fail: '200 OK es éxito. 404 = no encontrado, 500 = error del servidor, 301 = redirección.' }
+    },
+    {
+      label: 'BeautifulSoup',
+      title: 'Web Scraping con BeautifulSoup',
+      body: `<p class="lesson-p">BeautifulSoup parsea HTML y te permite navegar el DOM de una página para extraer datos.</p>
+      <div class="callout warn"><strong>Siempre revisá el robots.txt</strong> del sitio antes de scraping. Respetá los términos de uso. Agregá delays entre requests.</div>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> requests\n<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup\n<span class="kw">import</span> time\n\nurl = <span class="str">"https://quotes.toscrape.com"</span>\nresponse = requests.get(url)\nsoup = BeautifulSoup(response.text, <span class="str">"html.parser"</span>)\n\n<span class="cm"># Extraer elementos</span>\ncitas = soup.find_all(<span class="str">"span"</span>, class_=<span class="str">"text"</span>)\nautores = soup.find_all(<span class="str">"small"</span>, class_=<span class="str">"author"</span>)\n\n<span class="kw">for</span> cita, autor <span class="kw">in</span> zip(citas, autores):\n    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"{cita.text} — {autor.text}"</span>)\n\ntime.sleep(<span class="num">1</span>)   <span class="cm"># Siempre agregar delay</span>` },
+      editor: { id: 'e7b', default: '# Simulamos parseo de HTML sin hacer request real\nhtml = """\n<div class="productos">\n  <div class="item"><h3>Laptop</h3><span class="precio">$150,000</span><span class="stock">10 unidades</span></div>\n  <div class="item"><h3>Mouse</h3><span class="precio">$8,000</span><span class="stock">45 unidades</span></div>\n  <div class="item"><h3>Monitor</h3><span class="precio">$95,000</span><span class="stock">8 unidades</span></div>\n</div>\n"""\n\n# Parser manual simple\nimport re\nnombres = re.findall(r"<h3>(.*?)</h3>", html)\nprecios = re.findall(r\'<span class="precio">(.*?)</span>\', html)\n\nfor nombre, precio in zip(nombres, precios):\n    print(f"{nombre}: {precio}")' },
+      quiz: null
+    },
+    {
+      label: 'Selenium',
+      title: 'Selenium — páginas dinámicas',
+      body: `<p class="lesson-p">BeautifulSoup solo ve el HTML estático. Selenium controla un browser real, perfecto para páginas con JavaScript.</p>`,
+      code: { lang: 'python', src: `<span class="kw">from</span> selenium <span class="kw">import</span> webdriver\n<span class="kw">from</span> selenium.webdriver.common.by <span class="kw">import</span> By\n<span class="kw">from</span> selenium.webdriver.support.ui <span class="kw">import</span> WebDriverWait\n<span class="kw">from</span> selenium.webdriver.support <span class="kw">import</span> expected_conditions <span class="kw">as</span> EC\n\n<span class="cm"># Modo headless (sin ventana)</span>\nopciones = webdriver.ChromeOptions()\nopciones.add_argument(<span class="str">"--headless"</span>)\n\ndriver = webdriver.Chrome(options=opciones)\ndriver.get(<span class="str">"https://ejemplo.com"</span>)\n\n<span class="cm"># Esperar elemento y hacer clic</span>\nbtn = WebDriverWait(driver, <span class="num">10</span>).until(\n    EC.element_to_be_clickable((<span class="cls">By</span>.ID, <span class="str">"login-btn"</span>))\n)\nbtn.click()\n\n<span class="cm"># Extraer texto</span>\ntexto = driver.find_element(<span class="cls">By</span>.CLASS_NAME, <span class="str">"titulo"</span>).text\ndriver.quit()` },
+      editor: { id: 'e7c', default: '# Lógica de scraping sin browser real\ndef extraer_precios(html_simulado):\n    import re\n    patron = r\'data-price="(\\d+)"\'\n    precios = re.findall(patron, html_simulado)\n    return [int(p) for p in precios]\n\nhtml = \'<div data-price="150000"><div data-price="8000"><div data-price="95000">\'\nprecios = extraer_precios(html)\nprint("Precios encontrados:", precios)\nprint(f"Mín: ${min(precios):,}")\nprint(f"Máx: ${max(precios):,}")\nprint(f"Promedio: ${sum(precios)//len(precios):,}")' },
+      quiz: null
+    },
+    {
+      label: 'Proyecto',
+      title: 'Proyecto: scraper completo',
+      body: `<p class="lesson-p">Un scraper completo integra requests, parseo, limpieza y guardado de datos. Así se ve en un proyecto real.</p>`,
+      code: { lang: 'python', src: `<span class="kw">import</span> requests, json, time\n<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup\n<span class="kw">from</span> datetime <span class="kw">import</span> datetime\n\n<span class="kw">def</span> <span class="fn">scrape_quotes</span>(max_pages=<span class="num">3</span>):\n    base_url = <span class="str">"https://quotes.toscrape.com/page/{}"</span>\n    resultados = []\n\n    <span class="kw">for</span> pag <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, max_pages + <span class="num">1</span>):\n        r = requests.get(base_url.<span class="fn">format</span>(pag), timeout=<span class="num">5</span>)\n        r.raise_for_status()\n        soup = BeautifulSoup(r.text, <span class="str">"html.parser"</span>)\n\n        <span class="kw">for</span> q <span class="kw">in</span> soup.find_all(<span class="str">"div"</span>, class_=<span class="str">"quote"</span>):\n            resultados.append({\n                <span class="str">"texto"</span>: q.find(<span class="str">"span"</span>, class_=<span class="str">"text"</span>).text,\n                <span class="str">"autor"</span>: q.find(<span class="str">"small"</span>, class_=<span class="str">"author"</span>).text,\n                <span class="str">"tags"</span>: [t.text <span class="kw">for</span> t <span class="kw">in</span> q.find_all(<span class="str">"a"</span>, class_=<span class="str">"tag"</span>)]\n            })\n        time.sleep(<span class="num">1</span>)\n    <span class="kw">return</span> resultados` },
+      editor: { id: 'e7d', default: '# Estructura de un scraper real\ndef scraper_template(urls):\n    resultados = []\n    errores = []\n\n    for i, url in enumerate(urls):\n        try:\n            # Simular extracción\n            datos = {"url": url, "titulo": f"Página {i+1}", "items": i * 5 + 3}\n            resultados.append(datos)\n            print(f"✓ {url} → {datos[\'items\']} items")\n        except Exception as e:\n            errores.append({"url": url, "error": str(e)})\n            print(f"✗ {url} → Error")\n\n    print(f"\\nResultados: {len(resultados)} OK, {len(errores)} errores")\n    return resultados\n\nurls = ["https://sitio.com/p1", "https://sitio.com/p2", "https://sitio.com/p3"]\nscraper_template(urls)' },
+      quiz: { q: '¿Por qué agregar time.sleep() en un scraper?', opts: ['Hace el código más lento intencionalmente', 'Evita sobrecargar el servidor y respetar rate limits', 'Es obligatorio por ley', 'Mejora la velocidad de parsing'], correct: 1, ok: '¡Correcto! Ser un buen ciudadano de la web y evitar bans por sobrecarga.', fail: 'El delay respeta al servidor destino y evita que te bloqueen por demasiadas requests.' }
+    }
+  ]
+},
+{
+  id: 'mod8',
+  title: 'Buenas prácticas profesionales',
+  tag: 'Módulo 8',
+  desc: 'Git, testing, estilo de código y cómo armar un portfolio que te ayude a conseguir trabajo.',
+  duration: '10 horas',
+  topics: '4 temas',
+  lessons: [
+    {
+      label: 'Git',
+      title: 'Control de versiones con Git',
+      body: `<p class="lesson-p">Git es el estándar mundial. No existe empresa de tecnología que no lo use. Es obligatorio.</p>
+      <div class="callout tip"><strong>Regla de oro:</strong> cada commit debe representar un cambio lógico completo. Nunca guardes código roto en un commit.</div>`,
+      code: { lang: 'bash', src: `<span class="cm"># Flujo básico</span>\ngit init\ngit add .\ngit commit -m "feat: agrega función de login"\n\n<span class="cm"># Ramas</span>\ngit checkout -b feature/scraper\ngit merge feature/scraper\n\n<span class="cm"># GitHub</span>\ngit remote add origin https://github.com/user/repo\ngit push origin main\ngit pull origin main\n\n<span class="cm"># Convención de commits</span>\n<span class="cm"># feat:  nueva funcionalidad</span>\n<span class="cm"># fix:   corrección de bug</span>\n<span class="cm"># docs:  documentación</span>\n<span class="cm"># style: formato (sin cambios de lógica)</span>` },
+      editor: { id: 'e8a', default: '# Buenas prácticas de commits\ncommits_buenos = [\n    "feat: agrega endpoint de autenticación JWT",\n    "fix: corrige cálculo de impuestos para productos importados",\n    "docs: actualiza README con instrucciones de setup",\n    "refactor: extrae lógica de validación a clase separada",\n    "test: agrega tests unitarios para módulo de pagos"\n]\n\ncommits_malos = [\n    "cambios",\n    "arreglé cosas",\n    "asdfasdf",\n    "WIP",\n    "final FINAL v2 definitivo"\n]\n\nprint("Commits descriptivos:")\nfor c in commits_buenos:\n    print(f"  ✓ {c}")\nprint("\\nCommits que hay que evitar:")\nfor c in commits_malos:\n    print(f"  ✗ {c}")' },
+      quiz: { q: '¿Qué indica el prefijo "fix:" en un commit?', opts: ['Nueva funcionalidad', 'Cambio de documentación', 'Corrección de un bug', 'Refactorización'], correct: 2, ok: '¡Correcto! Conventional Commits es el estándar más adoptado.', fail: 'fix: indica corrección de un bug. feat: es nueva funcionalidad.' }
+    },
+    {
+      label: 'Testing',
+      title: 'Testing con pytest',
+      body: `<p class="lesson-p">Los tests validan que tu código hace lo que decís que hace. Son especialmente importantes cuando trabajás en equipo o cuando el código va a producción.</p>`,
+      code: { lang: 'python', src: `<span class="cm"># archivo: test_calculadora.py</span>\n<span class="kw">import</span> pytest\n<span class="kw">from</span> calculadora <span class="kw">import</span> sumar, dividir\n\n<span class="kw">def</span> <span class="fn">test_suma_basica</span>():\n    <span class="kw">assert</span> <span class="fn">sumar</span>(<span class="num">2</span>, <span class="num">3</span>) == <span class="num">5</span>\n\n<span class="kw">def</span> <span class="fn">test_suma_negativos</span>():\n    <span class="kw">assert</span> <span class="fn">sumar</span>(-<span class="num">1</span>, -<span class="num">2</span>) == -<span class="num">3</span>\n\n<span class="kw">def</span> <span class="fn">test_division_por_cero</span>():\n    <span class="kw">with</span> pytest.raises(ZeroDivisionError):\n        <span class="fn">dividir</span>(<span class="num">10</span>, <span class="num">0</span>)\n\n<span class="cm"># Ejecutar: pytest test_calculadora.py -v</span>` },
+      editor: { id: 'e8b', default: 'def calcular_descuento(precio, porcentaje):\n    if not 0 <= porcentaje <= 100:\n        raise ValueError("Porcentaje debe estar entre 0 y 100")\n    descuento = precio * (porcentaje / 100)\n    return round(precio - descuento, 2)\n\n# Tests manuales (normalmente usarías pytest)\ncasos = [\n    (1000, 20, 800.0),\n    (500, 0, 500.0),\n    (200, 100, 0.0),\n    (1500, 50, 750.0),\n]\n\npasados = 0\nfor precio, desc, esperado in casos:\n    resultado = calcular_descuento(precio, desc)\n    ok = resultado == esperado\n    print(f"test({precio}, {desc}%) = {resultado} → {\'✓\' if ok else \'✗\'}")\n    if ok:\n        pasados += 1\n\nprint(f"\\n{pasados}/{len(casos)} tests pasaron")' },
+      quiz: null
+    },
+    {
+      label: 'Estilo',
+      title: 'PEP8 y código limpio',
+      body: `<p class="lesson-p">PEP8 es la guía de estilo oficial de Python. Seguirla no es opcional en equipos profesionales. Black, flake8 y pylint la verifican automáticamente.</p>
+      <div class="concepts">
+        <div class="concept-card"><span class="cc-badge badge-blue">black</span><div class="cc-title">Formateador</div><div class="cc-desc">Formatea tu código automáticamente sin discusiones. El estándar de la industria.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-amber">flake8</span><div class="cc-title">Linter</div><div class="cc-desc">Detecta errores de estilo y bugs potenciales antes de ejecutar.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-green">mypy</span><div class="cc-title">Type checking</div><div class="cc-desc">Verifica los type hints. Muy valorado en proyectos grandes.</div></div>
+      </div>`,
+      code: { lang: 'python', src: `<span class="cm"># MAL</span>\n<span class="kw">def</span> <span class="fn">calcular</span>(x,y,z):\n  <span class="kw">return</span> x+y*z\n\n<span class="cm"># BIEN — con type hints y docstring</span>\n<span class="kw">def</span> <span class="fn">calcular_total</span>(precio: <span class="fn">float</span>, cantidad: <span class="fn">int</span>, impuesto: <span class="fn">float</span> = <span class="num">0.21</span>) -> <span class="fn">float</span>:\n    <span class="str">"""Calcula el total con impuesto incluido.\n\n    Args:\n        precio: Precio unitario.\n        cantidad: Número de unidades.\n        impuesto: Tasa de impuesto (default 21%).\n\n    Returns:\n        Total con impuesto.\n    """\span>\n    subtotal = precio * cantidad\n    <span class="kw">return</span> <span class="fn">round</span>(subtotal * (<span class="num">1</span> + impuesto), <span class="num">2</span>)` },
+      editor: { id: 'e8c', default: 'def calcular_total(precio: float, cantidad: int, impuesto: float = 0.21) -> float:\n    """\n    Calcula el total con impuesto.\n    Args:\n        precio: Precio unitario\n        cantidad: Cantidad de unidades\n        impuesto: Tasa de impuesto (default 21%)\n    Returns:\n        Total con impuesto\n    """\n    subtotal = precio * cantidad\n    return round(subtotal * (1 + impuesto), 2)\n\n# Probamos la función\nejercicios = [(100, 5), (250, 2), (1500, 1)]\nfor precio, cant in ejercicios:\n    total = calcular_total(precio, cant)\n    print(f"{cant}x ${precio} = ${total}")' },
+      quiz: null
+    },
+    {
+      label: 'Portfolio',
+      title: 'Portfolio y búsqueda laboral',
+      body: `<p class="lesson-p">El portfolio es tu currículum técnico. Los proyectos en GitHub hablan más que el título.</p>
+      <div class="concepts">
+        <div class="concept-card"><span class="cc-badge badge-blue">Proyecto 1</span><div class="cc-title">Scraper de datos</div><div class="cc-desc">Scraped + limpieza + CSV/JSON. Demuestra requests, BS4 y Pandas.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-green">Proyecto 2</span><div class="cc-title">API REST</div><div class="cc-desc">FastAPI + SQLite. CRUD básico. Demuestra POO y manejo de BD.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-amber">Proyecto 3</span><div class="cc-title">Dashboard de datos</div><div class="cc-desc">Dataset real + Pandas + Matplotlib. Análisis con conclusiones.</div></div>
+        <div class="concept-card"><span class="cc-badge badge-purple">Proyecto 4</span><div class="cc-title">Automatización</div><div class="cc-desc">Script que resuelve un problema real tuyo o de alguien conocido.</div></div>
+      </div>
+      <div class="callout tip"><strong>README es clave:</strong> incluí descripción, tecnologías usadas, cómo instalarlo, capturas de pantalla y qué aprendiste.</div>`,
+      code: { lang: 'markdown', src: `# Mi Proyecto de Análisis de Precios\n\nExtracción y análisis de precios de MercadoLibre\nusando Python, Requests y Pandas.\n\n## Tecnologías\n- Python 3.12\n- requests, beautifulsoup4\n- pandas, matplotlib\n\n## Instalación\n\`\`\`bash\ngit clone https://github.com/usuario/proyecto\ncd proyecto\npip install -r requirements.txt\npython main.py\n\`\`\`\n\n## Resultados\n[Incluir capturas o gráficos aquí]` },
+      editor: { id: 'e8d', default: '# Hoja de ruta post-curso\nruta = {\n    "Mes 1-2": [\n        "Completar los 8 módulos",\n        "Hacer ejercicios de cada módulo",\n        "Crear cuenta en GitHub"\n    ],\n    "Mes 3-4": [\n        "Proyecto 1: Scraper de datos reales",\n        "Proyecto 2: API básica con FastAPI",\n        "Subir ambos a GitHub con README"\n    ],\n    "Mes 5-6": [\n        "Proyecto 3: Dashboard con dataset real",\n        "Contribuir a un proyecto open source",\n        "Empezar a postular a trabajos junior"\n    ]\n}\n\nfor periodo, tareas in ruta.items():\n    print(f"\\n{periodo}:")\n    for tarea in tareas:\n        print(f"  [ ] {tarea}")' },
+      quiz: { q: '¿Cuántos proyectos mínimo recomendamos para el portfolio?', opts: ['1 proyecto muy grande', '2 proyectos simples', '3 a 4 proyectos variados', '10 proyectos pequeños'], correct: 2, ok: '¡Correcto! La variedad demuestra versatilidad. Calidad > cantidad.', fail: '3-4 proyectos variados muestran diferentes habilidades. Calidad y variedad importan más que cantidad.' }
+    }
+  ]
+}
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentMod = 0;
+let currentLesson = 0;
+const STORAGE_KEY = 'py_curso_progress';
+
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch { return {}; }
+}
+
+function saveProgress(modIdx, lessonIdx) {
+  const p = loadProgress();
+  if (!p[modIdx]) p[modIdx] = {};
+  p[modIdx][lessonIdx] = true;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  updateProgress();
+}
+
+function updateProgress() {
+  const p = loadProgress();
+  let total = 0, done = 0;
+  modules.forEach((m, mi) => {
+    m.lessons.forEach((_, li) => {
+      total++;
+      if (p[mi] && p[mi][li]) done++;
+    });
+  });
+  const pct = Math.round(done / total * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('top-done').textContent = done === 0 ? '' : `${done}/${total} lecciones`;
+}
+
+// ═══════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════
+function buildNav() {
+  const nav = document.getElementById('nav-list');
+  nav.innerHTML = '';
+  const p = loadProgress();
+  modules.forEach((m, mi) => {
+    const allDone = m.lessons.every((_, li) => p[mi] && p[mi][li]);
+    const btn = document.createElement('button');
+    btn.className = 'mod-btn' + (mi === currentMod ? ' active' : '') + (allDone ? ' done' : '');
+    btn.innerHTML = `<span class="mod-num">${mi + 1}</span><span class="mod-dot"></span><span style="flex:1">${m.title}</span>`;
+    btn.onclick = () => { currentMod = mi; currentLesson = 0; render(); };
+    nav.appendChild(btn);
+  });
+}
+
+function highlight(code) { return code; }
+
+function renderLesson(m, l, mi, li) {
+  const hasNext = li < m.lessons.length - 1;
+  const hasPrev = li > 0;
+  const hasNextMod = mi < modules.length - 1;
+
+  return `
+    <div class="mod-header">
+      <div class="mod-tag">${m.tag}</div>
+      <div class="mod-title">${m.title}</div>
+      <div class="mod-desc">${m.desc}</div>
+      <div class="mod-stats">
+        <div class="mod-stat"><span>${m.duration}</span> de duración</div>
+        <div class="mod-stat"><span>${m.topics}</span> en este módulo</div>
+        <div class="mod-stat"><span>Lección ${li + 1}/${m.lessons.length}</span></div>
+      </div>
+    </div>
+
+    <div class="lesson-block">
+      <div class="lesson-label">${l.label}</div>
+      <div class="lesson-h">${l.title}</div>
+      ${l.body}
+
+      ${l.code ? `
+        <div class="code-wrap">
+          <div class="code-bar">
+            <div class="code-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+            <span class="code-lang">${l.code.lang}</span>
+            <button class="copy-btn" onclick="copyCode(this, '${l.code.lang}')">Copiar</button>
+          </div>
+          <div class="code-body" id="cb-${mi}-${li}">${l.code.src}</div>
+        </div>
+      ` : ''}
+
+      ${l.editor ? `
+        <div class="editor-wrap">
+          <div class="editor-bar">
+            <span class="editor-label">Probá vos mismo</span>
+            <button class="run-btn" onclick="runCode('${l.editor.id}')">▶ Ejecutar</button>
+          </div>
+          <textarea class="editor-area" id="${l.editor.id}" spellcheck="false">${l.editor.default}</textarea>
+          <div class="output-area" id="out-${l.editor.id}"></div>
+        </div>
+      ` : ''}
+
+      ${l.quiz ? `
+        <div class="quiz-box">
+          <div class="quiz-badge">Quiz</div>
+          <div class="quiz-q">${l.quiz.q}</div>
+          <div class="quiz-opts">
+            ${l.quiz.opts.map((o, i) => `<button class="quiz-opt" onclick="answer(this,${i},${l.quiz.correct},'${l.editor ? l.editor.id : 'q'}-fb','${l.quiz.ok.replace(/'/g,"\\'")}','${l.quiz.fail.replace(/'/g,"\\'")}')"> ${o}</button>`).join('')}
+          </div>
+          <div class="quiz-feedback" id="${l.editor ? l.editor.id : 'q'}-fb"></div>
+        </div>
+      ` : ''}
+    </div>
+
+    <div class="lesson-nav">
+      ${hasPrev ? `<button class="nav-prev" onclick="goLesson(${mi},${li-1})">← Anterior</button>` : `<span></span>`}
+      ${hasNext
+        ? `<button class="nav-next" onclick="goLesson(${mi},${li+1})">Siguiente →</button>`
+        : hasNextMod
+          ? `<button class="nav-next" onclick="goLesson(${mi+1},0)">Siguiente módulo →</button>`
+          : `<button class="nav-next" style="background:var(--green);border-color:var(--green)">🎉 ¡Curso completado!</button>`
+      }
+    </div>
+  `;
+}
+
+function render() {
+  buildNav();
+  const m = modules[currentMod];
+  const l = m.lessons[currentLesson];
+  document.getElementById('content').innerHTML = renderLesson(m, l, currentMod, currentLesson);
+  document.getElementById('top-title').textContent = `${m.tag} — ${m.title}`;
+  document.getElementById('top-meta').textContent = `Lección ${currentLesson + 1} de ${m.lessons.length}`;
+  window.scrollTo(0, 0);
+  saveProgress(currentMod, currentLesson);
+}
+
+// ═══════════════════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════════════════
+function goLesson(mi, li) {
+  currentMod = mi;
+  currentLesson = li;
+  render();
+}
+
+function runCode(id) {
+  const code = document.getElementById(id).value;
+  const out = document.getElementById('out-' + id);
+  out.className = 'output-area show';
+  const lines = [];
+  try {
+    const safe = code
+      .replace(/input\([^)]*\)/g, '"[entrada simulada]"')
+      .replace(/print\(/g, '__p(')
+      .replace(/type\(/g, '__t(');
+    const fn = new Function('__p', '__t', 'np', 'pd', safe);
+    const npMock = {
+      array: (a) => ({ data: a, mean: () => a.reduce((s,x)=>s+x,0)/a.length, sum: () => a.reduce((s,x)=>s+x,0), max: () => Math.max(...a), min: () => Math.min(...a), std: () => 0, argmax: () => a.indexOf(Math.max(...a)), argmin: () => a.indexOf(Math.min(...a)), filter: (f) => a.filter(f), toString: () => `[${a.join(', ')}]` }),
+      zeros: (s) => `zeros(${s})`, eye: (n) => `eye(${n})`
+    };
+    fn(
+      (...args) => lines.push(args.map(a => a === null ? 'None' : a === true ? 'True' : a === false ? 'False' : (typeof a === 'object' && a !== null && a.data) ? `[${a.data}]` : JSON.stringify(a) !== undefined ? String(a) : a).join(' ')),
+      (v) => (v && v.data) ? "<class 'numpy.ndarray'>" : `<class '${typeof v}'>`,
+      npMock, {}
+    );
+    out.style.color = 'var(--green)';
+    out.textContent = lines.join('\n') || '(sin salida)';
+  } catch (e) {
+    out.className = 'output-area show err';
+    out.textContent = 'Error: ' + e.message;
+  }
+}
+
+function answer(btn, idx, correct, fbId, ok, fail) {
+  const opts = btn.parentElement.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  const fb = document.getElementById(fbId);
+  if (idx === correct) {
+    btn.classList.add('correct');
+    fb.textContent = '✓ ' + ok;
+  } else {
+    btn.classList.add('wrong');
+    opts[correct].classList.add('correct');
+    fb.textContent = '✗ ' + fail;
+  }
+  fb.className = 'quiz-feedback show';
+}
+
+function copyCode(btn, lang) {
+  const src = btn.closest('.code-wrap').querySelector('.code-body').innerText;
+  navigator.clipboard.writeText(src).then(() => {
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 1500);
+  });
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+updateProgress();
+render();
+</script>
+</body>
+</html>
